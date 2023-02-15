@@ -6,12 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/ConectWallet.unity
-    guid: 182ccf45b80694e43b35f8e516bd8451
+    path: Assets/Scenes/Sample.unity
+    guid: 1f0218b70bcd8d249900a04dc7da36f4
   - enabled: 1
-    path: Assets/Scenes/Dashboard.unity
-    guid: 037de312a40b6a840a015ee33b09eba1
+    path: Assets/Scenes/Web3Modal.unity
+    guid: ea0b39883db7db74ea900a783bef31a7
   - enabled: 1
     path: Assets/Scenes/Snake.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    guid: 762b343f3730d6143a0da0bfdcce4afe
   m_configObjects: {}

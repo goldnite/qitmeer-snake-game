@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nethereum", "Nethereum.csproj", "{a252cd97-798e-8a69-6330-f8e90faba35a}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web3Unity", "Web3Unity.csproj", "{4998b58a-e1d7-d2d6-81bc-adaacd7e51f0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniTask", "UniTask.csproj", "{5da6778c-768d-0a2d-501b-2bd2f3840972}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniTask.Linq", "UniTask.Linq.csproj", "{9bfc2399-f7f4-60b5-be0c-2391e75002b2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{512eb1df-6c06-d56e-cbdf-8b0566ff821c}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniTask.DOTween", "UniTask.DOTween.csproj", "{0496aa3e-b6c7-4ab4-b744-b97ef920c966}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "endel.nativewebsocket", "endel.nativewebsocket.csproj", "{6216fdb5-fb78-871e-f291-13bafb0bd99d}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniTask.TextMeshPro", "UniTask.TextMeshPro.csproj", "{2d2526c6-89a1-c47e-7d74-481af97aa461}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniTask.Addressables", "UniTask.Addressables.csproj", "{5a682763-26ef-85cc-37e4-c52a1fe668a2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{2d61749b-1aeb-3eb6-a547-6805f4fb2dcc}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniTask.Editor", "UniTask.Editor.csproj", "{5f778a34-fd08-041f-6991-d22c4f8f2200}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{a252cd97-798e-8a69-6330-f8e90faba35a}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{a252cd97-798e-8a69-6330-f8e90faba35a}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4998b58a-e1d7-d2d6-81bc-adaacd7e51f0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4998b58a-e1d7-d2d6-81bc-adaacd7e51f0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5da6778c-768d-0a2d-501b-2bd2f3840972}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5da6778c-768d-0a2d-501b-2bd2f3840972}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9bfc2399-f7f4-60b5-be0c-2391e75002b2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9bfc2399-f7f4-60b5-be0c-2391e75002b2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{512eb1df-6c06-d56e-cbdf-8b0566ff821c}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{512eb1df-6c06-d56e-cbdf-8b0566ff821c}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0496aa3e-b6c7-4ab4-b744-b97ef920c966}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0496aa3e-b6c7-4ab4-b744-b97ef920c966}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6216fdb5-fb78-871e-f291-13bafb0bd99d}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6216fdb5-fb78-871e-f291-13bafb0bd99d}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2d2526c6-89a1-c47e-7d74-481af97aa461}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2d2526c6-89a1-c47e-7d74-481af97aa461}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5a682763-26ef-85cc-37e4-c52a1fe668a2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5a682763-26ef-85cc-37e4-c52a1fe668a2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2d61749b-1aeb-3eb6-a547-6805f4fb2dcc}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2d61749b-1aeb-3eb6-a547-6805f4fb2dcc}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5f778a34-fd08-041f-6991-d22c4f8f2200}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5f778a34-fd08-041f-6991-d22c4f8f2200}.Debug|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
