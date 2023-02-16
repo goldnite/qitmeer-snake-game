@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/utils/Context.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+
 // import "hardhat/console.sol";
 
 contract SnakeGame is Context, Ownable, ReentrancyGuard {
@@ -145,15 +146,19 @@ contract SnakeGame is Context, Ownable, ReentrancyGuard {
     }
 
     // Get functions
-    function playerCount() external view returns (uint256) {
-        return players.length;
+    function getAwardShare() external view returns (uint256[5] memory) {
+        return awardShare;
     }
 
-    function participantCount() external view returns (uint256) {
-        return participants.length;
+    function getAwardRecords() external view returns (AwardRecord[] memory) {
+        return awardRecords;
     }
 
-    function awardCount() external view returns (uint256) {
-        return awardRecords.length;
+    function getPlayers() external view returns (address[] memory) {
+        return players;
+    }
+
+    function getParticipants() external view returns (address[] memory) {
+        return participants;
     }
 }
