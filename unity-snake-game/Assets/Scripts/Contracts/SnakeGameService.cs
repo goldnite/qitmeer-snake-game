@@ -83,17 +83,6 @@ namespace SnakeGame
             return ContractHandler.QueryAsync<AccPointsFunction, BigInteger>(accPointsFunction, blockParameter);
         }
 
-        public UniTask<BigInteger> AwardCountQueryAsync(AwardCountFunction awardCountFunction, BlockParameter blockParameter = null)
-        {
-            return ContractHandler.QueryAsync<AwardCountFunction, BigInteger>(awardCountFunction, blockParameter);
-        }
-
-        
-        public UniTask<BigInteger> AwardCountQueryAsync(BlockParameter blockParameter = null)
-        {
-            return ContractHandler.QueryAsync<AwardCountFunction, BigInteger>(null, blockParameter);
-        }
-
         public UniTask<BigInteger> AwardRecordsQueryAsync(AwardRecordsFunction awardRecordsFunction, BlockParameter blockParameter = null)
         {
             return ContractHandler.QueryAsync<AwardRecordsFunction, BigInteger>(awardRecordsFunction, blockParameter);
@@ -168,6 +157,49 @@ namespace SnakeGame
              return ContractHandler.SendRequestAndWaitForReceiptAsync(endGameFunction, cancellationToken);
         }
 
+        public UniTask<GetAwardRecordsOutputDTO> GetAwardRecordsQueryAsync(GetAwardRecordsFunction getAwardRecordsFunction, BlockParameter blockParameter = null)
+        {
+            return ContractHandler.QueryDeserializingToObjectAsync<GetAwardRecordsFunction, GetAwardRecordsOutputDTO>(getAwardRecordsFunction, blockParameter);
+        }
+
+        public UniTask<GetAwardRecordsOutputDTO> GetAwardRecordsQueryAsync(BlockParameter blockParameter = null)
+        {
+            return ContractHandler.QueryDeserializingToObjectAsync<GetAwardRecordsFunction, GetAwardRecordsOutputDTO>(null, blockParameter);
+        }
+
+        public UniTask<List<BigInteger>> GetAwardShareQueryAsync(GetAwardShareFunction getAwardShareFunction, BlockParameter blockParameter = null)
+        {
+            return ContractHandler.QueryAsync<GetAwardShareFunction, List<BigInteger>>(getAwardShareFunction, blockParameter);
+        }
+
+        
+        public UniTask<List<BigInteger>> GetAwardShareQueryAsync(BlockParameter blockParameter = null)
+        {
+            return ContractHandler.QueryAsync<GetAwardShareFunction, List<BigInteger>>(null, blockParameter);
+        }
+
+        public UniTask<List<string>> GetParticipantsQueryAsync(GetParticipantsFunction getParticipantsFunction, BlockParameter blockParameter = null)
+        {
+            return ContractHandler.QueryAsync<GetParticipantsFunction, List<string>>(getParticipantsFunction, blockParameter);
+        }
+
+        
+        public UniTask<List<string>> GetParticipantsQueryAsync(BlockParameter blockParameter = null)
+        {
+            return ContractHandler.QueryAsync<GetParticipantsFunction, List<string>>(null, blockParameter);
+        }
+
+        public UniTask<List<string>> GetPlayersQueryAsync(GetPlayersFunction getPlayersFunction, BlockParameter blockParameter = null)
+        {
+            return ContractHandler.QueryAsync<GetPlayersFunction, List<string>>(getPlayersFunction, blockParameter);
+        }
+
+        
+        public UniTask<List<string>> GetPlayersQueryAsync(BlockParameter blockParameter = null)
+        {
+            return ContractHandler.QueryAsync<GetPlayersFunction, List<string>>(null, blockParameter);
+        }
+
         public UniTask<BigInteger> LastPlayedTimesQueryAsync(LastPlayedTimesFunction lastPlayedTimesFunction, BlockParameter blockParameter = null)
         {
             return ContractHandler.QueryAsync<LastPlayedTimesFunction, BigInteger>(lastPlayedTimesFunction, blockParameter);
@@ -193,17 +225,6 @@ namespace SnakeGame
             return ContractHandler.QueryAsync<OwnerFunction, string>(null, blockParameter);
         }
 
-        public UniTask<BigInteger> ParticipantCountQueryAsync(ParticipantCountFunction participantCountFunction, BlockParameter blockParameter = null)
-        {
-            return ContractHandler.QueryAsync<ParticipantCountFunction, BigInteger>(participantCountFunction, blockParameter);
-        }
-
-        
-        public UniTask<BigInteger> ParticipantCountQueryAsync(BlockParameter blockParameter = null)
-        {
-            return ContractHandler.QueryAsync<ParticipantCountFunction, BigInteger>(null, blockParameter);
-        }
-
         public UniTask<string> ParticipantsQueryAsync(ParticipantsFunction participantsFunction, BlockParameter blockParameter = null)
         {
             return ContractHandler.QueryAsync<ParticipantsFunction, string>(participantsFunction, blockParameter);
@@ -216,17 +237,6 @@ namespace SnakeGame
                 participantsFunction.ReturnValue1 = returnValue1;
             
             return ContractHandler.QueryAsync<ParticipantsFunction, string>(participantsFunction, blockParameter);
-        }
-
-        public UniTask<BigInteger> PlayerCountQueryAsync(PlayerCountFunction playerCountFunction, BlockParameter blockParameter = null)
-        {
-            return ContractHandler.QueryAsync<PlayerCountFunction, BigInteger>(playerCountFunction, blockParameter);
-        }
-
-        
-        public UniTask<BigInteger> PlayerCountQueryAsync(BlockParameter blockParameter = null)
-        {
-            return ContractHandler.QueryAsync<PlayerCountFunction, BigInteger>(null, blockParameter);
         }
 
         public UniTask<string> PlayersQueryAsync(PlayersFunction playersFunction, BlockParameter blockParameter = null)

@@ -46,14 +46,6 @@ namespace SnakeGame
         public virtual string ReturnValue1 { get; set; }
     }
 
-    public partial class AwardCountFunction : AwardCountFunctionBase { }
-
-    [Function("awardCount", "uint256")]
-    public class AwardCountFunctionBase : FunctionMessage
-    {
-
-    }
-
     public partial class AwardRecordsFunction : AwardRecordsFunctionBase { }
 
     [Function("awardRecords", "uint256")]
@@ -89,6 +81,38 @@ namespace SnakeGame
         public virtual BigInteger Point { get; set; }
     }
 
+    public partial class GetAwardRecordsFunction : GetAwardRecordsFunctionBase { }
+
+    [Function("getAwardRecords", typeof(GetAwardRecordsOutputDTO))]
+    public class GetAwardRecordsFunctionBase : FunctionMessage
+    {
+
+    }
+
+    public partial class GetAwardShareFunction : GetAwardShareFunctionBase { }
+
+    [Function("getAwardShare", "uint256[5]")]
+    public class GetAwardShareFunctionBase : FunctionMessage
+    {
+
+    }
+
+    public partial class GetParticipantsFunction : GetParticipantsFunctionBase { }
+
+    [Function("getParticipants", "address[]")]
+    public class GetParticipantsFunctionBase : FunctionMessage
+    {
+
+    }
+
+    public partial class GetPlayersFunction : GetPlayersFunctionBase { }
+
+    [Function("getPlayers", "address[]")]
+    public class GetPlayersFunctionBase : FunctionMessage
+    {
+
+    }
+
     public partial class LastPlayedTimesFunction : LastPlayedTimesFunctionBase { }
 
     [Function("lastPlayedTimes", "uint256")]
@@ -106,14 +130,6 @@ namespace SnakeGame
 
     }
 
-    public partial class ParticipantCountFunction : ParticipantCountFunctionBase { }
-
-    [Function("participantCount", "uint256")]
-    public class ParticipantCountFunctionBase : FunctionMessage
-    {
-
-    }
-
     public partial class ParticipantsFunction : ParticipantsFunctionBase { }
 
     [Function("participants", "address")]
@@ -121,14 +137,6 @@ namespace SnakeGame
     {
         [Parameter("uint256", "", 1)]
         public virtual BigInteger ReturnValue1 { get; set; }
-    }
-
-    public partial class PlayerCountFunction : PlayerCountFunctionBase { }
-
-    [Function("playerCount", "uint256")]
-    public class PlayerCountFunctionBase : FunctionMessage
-    {
-
     }
 
     public partial class PlayersFunction : PlayersFunctionBase { }
@@ -293,15 +301,6 @@ namespace SnakeGame
         public virtual BigInteger ReturnValue1 { get; set; }
     }
 
-    public partial class AwardCountOutputDTO : AwardCountOutputDTOBase { }
-
-    [FunctionOutput]
-    public class AwardCountOutputDTOBase : IFunctionOutputDTO 
-    {
-        [Parameter("uint256", "", 1)]
-        public virtual BigInteger ReturnValue1 { get; set; }
-    }
-
     public partial class AwardRecordsOutputDTO : AwardRecordsOutputDTOBase { }
 
     [FunctionOutput]
@@ -324,6 +323,42 @@ namespace SnakeGame
 
 
 
+    public partial class GetAwardRecordsOutputDTO : GetAwardRecordsOutputDTOBase { }
+
+    [FunctionOutput]
+    public class GetAwardRecordsOutputDTOBase : IFunctionOutputDTO 
+    {
+        [Parameter("tuple[]", "", 1)]
+        public virtual List<AwardRecord> ReturnValue1 { get; set; }
+    }
+
+    public partial class GetAwardShareOutputDTO : GetAwardShareOutputDTOBase { }
+
+    [FunctionOutput]
+    public class GetAwardShareOutputDTOBase : IFunctionOutputDTO 
+    {
+        [Parameter("uint256[5]", "", 1)]
+        public virtual List<BigInteger> ReturnValue1 { get; set; }
+    }
+
+    public partial class GetParticipantsOutputDTO : GetParticipantsOutputDTOBase { }
+
+    [FunctionOutput]
+    public class GetParticipantsOutputDTOBase : IFunctionOutputDTO 
+    {
+        [Parameter("address[]", "", 1)]
+        public virtual List<string> ReturnValue1 { get; set; }
+    }
+
+    public partial class GetPlayersOutputDTO : GetPlayersOutputDTOBase { }
+
+    [FunctionOutput]
+    public class GetPlayersOutputDTOBase : IFunctionOutputDTO 
+    {
+        [Parameter("address[]", "", 1)]
+        public virtual List<string> ReturnValue1 { get; set; }
+    }
+
     public partial class LastPlayedTimesOutputDTO : LastPlayedTimesOutputDTOBase { }
 
     [FunctionOutput]
@@ -342,15 +377,6 @@ namespace SnakeGame
         public virtual string ReturnValue1 { get; set; }
     }
 
-    public partial class ParticipantCountOutputDTO : ParticipantCountOutputDTOBase { }
-
-    [FunctionOutput]
-    public class ParticipantCountOutputDTOBase : IFunctionOutputDTO 
-    {
-        [Parameter("uint256", "", 1)]
-        public virtual BigInteger ReturnValue1 { get; set; }
-    }
-
     public partial class ParticipantsOutputDTO : ParticipantsOutputDTOBase { }
 
     [FunctionOutput]
@@ -358,15 +384,6 @@ namespace SnakeGame
     {
         [Parameter("address", "", 1)]
         public virtual string ReturnValue1 { get; set; }
-    }
-
-    public partial class PlayerCountOutputDTO : PlayerCountOutputDTOBase { }
-
-    [FunctionOutput]
-    public class PlayerCountOutputDTOBase : IFunctionOutputDTO 
-    {
-        [Parameter("uint256", "", 1)]
-        public virtual BigInteger ReturnValue1 { get; set; }
     }
 
     public partial class PlayersOutputDTO : PlayersOutputDTOBase { }

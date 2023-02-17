@@ -6,6 +6,7 @@ using Nethereum.RPC.HostWallet;
 using Nethereum.Util;
 using System;
 using System.Numerics;
+using System.Linq;
 using Unity.Burst.CompilerServices;
 using UnityEditor;
 using UnityEngine;
@@ -22,12 +23,16 @@ public class Dashboard : MonoBehaviour
   // UI Elements
   protected VisualElement root;
   protected VisualElement dashboard;
+  protected ScrollView scrollBoard;
   protected Button btnWallet;
+  protected Button btnStart;
   protected Label lblLabel;
+  public VisualTreeAsset scoreRowTemplate;
 
   // Contract variables
-  private SnakeGameService snakeGameService;
-  public const string contractAddress = "0x5d4dc51a0f1c7ac8426aa28b78fff45369221851";
+  public SnakeGameService snakeGameService;
+  public const string contractAddress = "0xa66bac7b62249c79eaca335aa5f9524783c6e670";
+  // public const string contractAddress = "0x0Ff3AEFb87b0cD7163d13e45db1a916632ef41Eb";
 
   private bool connected = false;
   private bool flag_fetchData = false;
@@ -37,10 +42,14 @@ public class Dashboard : MonoBehaviour
   {
     root = GetComponent<UIDocument>().rootVisualElement;
     dashboard = root.Q<VisualElement>("dashboard");
+    scrollBoard = root.Q<ScrollView>("scrollBoard");
     btnWallet = root.Q<Button>("btnWallet");
+    btnStart = root.Q<Button>("btnStart");
     lblLabel = root.Q<Label>("lblLabel");
 
     btnWallet.clicked += BtnWallet_clicked;
+    btnStart.clicked += BtnStart_clicked;
+    btnStart.SetEnabled(false);
 
     Web3Connect.Instance.OnConnected += Instance_OnConnected;
   }
@@ -65,73 +74,66 @@ public class Dashboard : MonoBehaviour
 
       try
       {
-        // var 
-        // var decimals = await tokenService.DecimalsQueryAsync();
-        // var symbol = await tokenService.SymbolQueryAsync();
-        // emple of call balance
-        // BigInteger result = await tokenService.BalanceOfQueryAsync(Web3Connect.Instance.AccountAddress);
-        // var amount = UnitConversion.Convert.FromWei(result, decimals);
-        // lblResult.text = $"My balance {amount} {symbol}";
         var owner = await snakeGameService.OwnerQueryAsync();
-        Debug.Log($"owner: {owner}");
         var price = await snakeGameService.PriceQueryAsync();
-        Debug.Log($"price: {price}");
         var withdrawAddress = await snakeGameService.WithdrawAddressQueryAsync();
-        Debug.Log($"withdrawAddress: {withdrawAddress}");
-        var playerCount = await snakeGameService.PlayerCountQueryAsync();
-        Debug.Log($"playerCount: {playerCount}");
-        var participantCount = await snakeGameService.ParticipantCountQueryAsync();
-        Debug.Log($"participantCount: {participantCount}");
-        var awardCount = await snakeGameService.AwardCountQueryAsync();
-        Debug.Log($"awardCount: {awardCount}");
-        var awardRecords = new BigInteger[(int)awardCount];
-        for (int i = 0; i < (int)awardCount; i++)
-        {
-          awardRecords[i] = await snakeGameService.AwardRecordsQueryAsync(i);
-          Debug.Log($"awardRecords[{i}]: {awardRecords[i]}");
-        }
-        var awardShare = new int[5];
-        for (int i = 0; i < 5; i++)
-        {
-          awardShare[i] = (int)await snakeGameService.AwardShareQueryAsync(i);
-          Debug.Log($"awardShare[{i}]: {awardShare[i]}");
-        }
-        Debug.Log("---Players---");
-        var players = new Player[(int)playerCount];
-        for (int i = 0; i < (int)playerCount; i++)
+        var awardShare = await snakeGameService.GetAwardShareQueryAsync();
+        var awardRecords = await snakeGameService.GetAwardRecordsQueryAsync();
+        var playerAddresses = await snakeGameService.GetPlayersQueryAsync();
+        var players = new Player[playerAddresses.Count];
+        for (int i = 0; i < (int)playerAddresses.Count; i++)
         {
           players[i] = new Player();
-          players[i].address = await snakeGameService.PlayersQueryAsync(i);
-          players[i].accAward = await snakeGameService.AccAwardsQueryAsync(players[i].address);
-          players[i].accPoint = await snakeGameService.AccPointsQueryAsync(players[i].address);
-          Debug.Log($"address {i}: {players[i].address}");
-          Debug.Log($"address {i}: {players[i].accAward}");
-          Debug.Log($"address {i}: {players[i].accPoint}");
+          players[i].address = playerAddresses[i];
+          players[i].accAward = await snakeGameService.AccAwardsQueryAsync(playerAddresses[i]);
+          players[i].accPoint = await snakeGameService.AccPointsQueryAsync(playerAddresses[i]);
         }
-        Debug.Log("---Participants---");
-        var participants = new Participant[(int)participantCount];
-        for (int i = 0; i < participantCount; i++)
+        var participantAddresses = await snakeGameService.GetParticipantsQueryAsync();
+        var participants = new Participant[participantAddresses.Count];
+        for (int i = 0; i < participantAddresses.Count; i++)
         {
           participants[i] = new Participant();
-          participants[i].address = await snakeGameService.ParticipantsQueryAsync(i);
-          participants[i].totalPoint = await snakeGameService.TotalPointsQueryAsync(participants[i].address);
-          Debug.Log($"address {i}: {participants[i].address}");
-          Debug.Log($"address {i}: {participants[i].totalPoint}");
+          participants[i].address = participantAddresses[i];
+          participants[i].totalPoint = await snakeGameService.TotalPointsQueryAsync(participantAddresses[i]);
         }
-
-        await UniTask.Run(() => BtnSwitch_clicked());
-        Debug.Log(Web3Connect.Instance.ChainId);
-        // if (Web3Connect.Instance.ChainId == "0x5")
-        // {
-          var txReceipt = await snakeGameService.EndGameRequestAndWaitForReceiptAsync(new BigInteger(200));
-          Debug.Log(Newtonsoft.Json.JsonConvert.SerializeObject(txReceipt));
-        // }
+        Debug.Log($"Owner: {owner}");
+        Debug.Log($"Price: {price}");
+        Debug.Log($"withdrawAddress: {withdrawAddress}");
+        Debug.Log($"awardShare: {awardShare}");
+        Debug.Log($"awardRecords: {awardRecords}");
+        Debug.Log($"playerAddresses: {playerAddresses}");
+        Debug.Log($"players: {players}");
+        Debug.Log($"participantAddresses: {participantAddresses}");
+        Debug.Log($"participants: {participants}");
       }
       catch (System.Exception e)
       {
         Debug.LogException(e);
       }
     }
+  }
+
+  private async void BtnStart_clicked()
+  {
+    try
+    {
+      var txReceipt = await snakeGameService.StartGameRequestAndWaitForReceiptAsync();
+      Debug.Log(Newtonsoft.Json.JsonConvert.SerializeObject(txReceipt));
+      root.style.display = DisplayStyle.None;
+      GameObject.Find("Snake").SendMessage("StartGame");
+    }
+    catch (System.Exception e)
+    {
+      Debug.LogException(e);
+    }
+  }
+
+  private async void EndGame(int score)
+  {
+    root.style.display = DisplayStyle.Flex;
+    var txReceipt = await snakeGameService.EndGameRequestAndWaitForReceiptAsync(score);
+    Debug.Log(Newtonsoft.Json.JsonConvert.SerializeObject(txReceipt));
+    FetchData();
   }
 
   private async void BtnSwitch_clicked()
@@ -182,6 +184,18 @@ public class Dashboard : MonoBehaviour
   // Update is called once per frame
   void Update()
   {
+    scrollBoard.Clear();
+    var scoreRow = scoreRowTemplate.CloneTree().ElementAt(0);
+    scrollBoard.Add(scoreRow);
+    for (int i = 0; i < 100; i++)
+    {
+      scoreRow = scoreRowTemplate.CloneTree().ElementAt(0);
+      (scoreRow.ElementAt(0) as Label).text = (i + 1).ToString();
+      (scoreRow.ElementAt(1) as Label).text = "0x000000000000";
+      (scoreRow.ElementAt(2) as Label).text = (100 - i).ToString();
+      scrollBoard.Add(scoreRow);
+    }
+
     if (!connected)
     {
       if (Web3Connect.Instance.Connected)
@@ -202,5 +216,6 @@ public class Dashboard : MonoBehaviour
       flag_fetchData = true;
       InvokeRepeating("FetchData", 0, 100000);
     }
+    btnStart.SetEnabled(true);
   }
 }
