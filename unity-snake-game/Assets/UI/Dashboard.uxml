@@ -1,13 +1,18 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/Style.uss?fileID=7433441132597879392&amp;guid=fdab1c3b4080f944abe0e32871da7705&amp;type=3#Style" />
-    <ui:VisualElement name="root" style="position: absolute; right: 0; left: 0; top: 0; bottom: 0;">
-        <ui:VisualElement name="background" style="position: absolute; width: 100%; height: 100%; background-color: rgb(70, 70, 70);" />
-        <ui:VisualElement name="dashboard" style="width: 100%; height: 100%; position: absolute; padding-left: 80px; padding-right: 80px; padding-top: 80px;">
-            <ui:ScrollView name="scrollBoard" />
+    <ui:VisualElement name="root" style="position: absolute; right: 0; left: 0; top: 0; bottom: 0; background-image: url(&apos;project://database/Assets/Sprites/snakeback.jpg?fileID=2800000&amp;guid=d1167a56732afff4d8f1f814bfd667cc&amp;type=3#snakeback&apos;);">
+        <ui:VisualElement name="topbar" style="position: relative; width: 100%; height: 120px; justify-content: space-around; align-items: center; visibility: hidden; display: flex; padding-top: 20px; flex-direction: row;">
+            <ui:Button text="Connect Wallet" display-tooltip-when-elided="true" name="btnWallet" style="position: relative; left: auto; top: auto; right: auto; bottom: auto; width: 200px; height: 48px; visibility: visible; display: flex; background-color: rgb(96, 96, 96); margin-left: 3px; margin-right: 3px; margin-top: 1px; margin-bottom: 1px; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px;" />
+            <ui:Button text="Start Game" display-tooltip-when-elided="true" name="btnStart" style="position: relative; left: auto; top: auto; right: auto; bottom: auto; width: 200px; height: 48px; visibility: visible; display: flex; background-color: rgb(96, 96, 96); padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px;" />
+            <ui:Button text="Lobby" display-tooltip-when-elided="true" name="btnParticipants" style="position: relative; left: auto; top: auto; right: auto; bottom: auto; width: 200px; height: 48px; visibility: visible; display: flex; background-color: rgb(96, 96, 96); padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px;" />
+            <ui:Button text="Standing" display-tooltip-when-elided="true" name="btnPlayers" style="position: relative; left: auto; top: auto; right: auto; bottom: auto; width: 200px; height: 48px; visibility: visible; display: flex; background-color: rgb(96, 96, 96); padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px;" />
+            <ui:Button text=" Hall of Fame" display-tooltip-when-elided="true" name="btnAwards" style="position: relative; left: auto; top: auto; right: auto; bottom: auto; width: 200px; height: 48px; visibility: visible; display: flex; background-color: rgb(96, 96, 96); padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px;" />
         </ui:VisualElement>
-        <ui:Button text="Connect Wallet" display-tooltip-when-elided="true" name="btnWallet" style="right: 20px; width: 200px; height: 48px; white-space: nowrap; -unity-text-align: middle-center; top: 20px; left: initial; bottom: initial; position: absolute; overflow: hidden; background-color: rgb(96, 96, 96);" />
-        <ui:VisualElement style="position: absolute; width: 100%; height: 100%; justify-content: flex-start; align-items: center; visibility: hidden; display: flex; padding-top: 20px;">
-            <ui:Button text="Start Game" display-tooltip-when-elided="true" name="btnStart" style="position: relative; left: auto; top: auto; right: auto; bottom: auto; width: 200px; height: 48px; visibility: visible; display: flex; background-color: rgb(96, 96, 96);" />
+        <ui:VisualElement name="mainContainer" style="height: 100%; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px;">
+            <ui:ScrollView name="scrollView" style="width: auto; height: 100%; margin-left: 40px; margin-right: 40px; margin-top: 0; margin-bottom: 20px; flex-direction: row; justify-content: space-between;">
+                <ui:VisualElement name="scrollBoard" style="flex-direction: row; width: 100%; height: 100%; justify-content: space-around; transition-duration: 0.5s;" />
+            </ui:ScrollView>
         </ui:VisualElement>
+        <ui:VisualElement name="overlay" style="position: absolute; width: 100%; height: 100%; background-color: rgb(70, 70, 70); visibility: visible; display: none;" />
     </ui:VisualElement>
 </ui:UXML>

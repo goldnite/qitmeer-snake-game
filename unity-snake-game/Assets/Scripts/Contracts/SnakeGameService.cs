@@ -239,6 +239,20 @@ namespace SnakeGame
             return ContractHandler.QueryAsync<ParticipantsFunction, string>(participantsFunction, blockParameter);
         }
 
+        public UniTask<bool> PlayableQueryAsync(PlayableFunction playableFunction, BlockParameter blockParameter = null)
+        {
+            return ContractHandler.QueryAsync<PlayableFunction, bool>(playableFunction, blockParameter);
+        }
+
+        
+        public UniTask<bool> PlayableQueryAsync(string returnValue1, BlockParameter blockParameter = null)
+        {
+            var playableFunction = new PlayableFunction();
+                playableFunction.ReturnValue1 = returnValue1;
+            
+            return ContractHandler.QueryAsync<PlayableFunction, bool>(playableFunction, blockParameter);
+        }
+
         public UniTask<string> PlayersQueryAsync(PlayersFunction playersFunction, BlockParameter blockParameter = null)
         {
             return ContractHandler.QueryAsync<PlayersFunction, string>(playersFunction, blockParameter);

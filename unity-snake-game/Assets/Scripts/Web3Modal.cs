@@ -85,8 +85,8 @@ public class Web3Modal : MonoBehaviour
   private async UniTask GetUri()
   {
     // await Web3Connect.Instance.ConnectWalletConnect("https://rpc.ankr.com/polygon_mumbai");
-    // await Web3Connect.Instance.ConnectWalletConnect("https://meer.testnet.meerfans.club");
-    await Web3Connect.Instance.ConnectWalletConnect("https://eth-goerli.public.blastapi.io");
+    await Web3Connect.Instance.ConnectWalletConnect("https://meer.testnet.meerfans.club");
+    // await Web3Connect.Instance.ConnectWalletConnect("https://eth-goerli.public.blastapi.io");
     // url: "https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
     // url: "https://eth-goerli.g.alchemy.com/v2/demo",
     //   url: "https://eth-goerli.public.blastapi.io",

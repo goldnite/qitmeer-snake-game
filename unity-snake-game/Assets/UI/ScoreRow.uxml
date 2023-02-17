@@ -1,7 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <ui:VisualElement name="scoreHeader" style="height: 40px; flex-direction: row; justify-content: space-between; align-items: center;">
-        <ui:Label text="Rank" display-tooltip-when-elided="true" name="rank" />
-        <ui:Label text="Address" display-tooltip-when-elided="true" name="address" />
-        <ui:Label text="Score" display-tooltip-when-elided="true" name="score" />
-    </ui:VisualElement>
-</ui:UXML>

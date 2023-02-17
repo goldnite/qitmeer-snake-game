@@ -47,8 +47,6 @@
      <Compile Include="Assets\Scripts\Contracts\AwardRecord.cs" />
      <Compile Include="Assets\Scripts\Dashboard.cs" />
      <Compile Include="Assets\Scripts\Contracts\SnakeGameService.cs" />
-     <Compile Include="Assets\Scripts\Contracts\WorldCupBetDefinition.cs" />
-     <Compile Include="Assets\Scripts\Contracts\WorldCupBetService.cs" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />
@@ -57,7 +55,6 @@
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface.shader" />
      <None Include="Assets\TextMesh Pro\Sprites\EmojiOne Attribution.txt" />
-     <None Include="Assets\UI\ScoreRow.uxml" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap-Custom-Atlas.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile SSD.shader" />

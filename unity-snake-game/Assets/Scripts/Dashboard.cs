@@ -4,6 +4,7 @@ using Nethereum.Hex.HexTypes;
 using Nethereum.RPC.Eth.DTOs;
 using Nethereum.RPC.HostWallet;
 using Nethereum.Util;
+using Nethereum.Web3;
 using System;
 using System.Numerics;
 using System.Linq;
@@ -23,35 +24,44 @@ public class Dashboard : MonoBehaviour
   // UI Elements
   protected VisualElement root;
   protected VisualElement dashboard;
-  protected ScrollView scrollBoard;
-  protected Button btnWallet;
-  protected Button btnStart;
-  protected Label lblLabel;
-  public VisualTreeAsset scoreRowTemplate;
+  protected VisualElement scrollBoard;
+  protected Button btnWallet, btnStart, btnParticipants, btnPlayers, btnAwards;
 
   // Contract variables
   public SnakeGameService snakeGameService;
-  public const string contractAddress = "0xa66bac7b62249c79eaca335aa5f9524783c6e670";
-  // public const string contractAddress = "0x0Ff3AEFb87b0cD7163d13e45db1a916632ef41Eb";
+  // public const string contractAddress = "0x7f1cf46659b54dab4f0ae4a2157284f3ac38ef54";
+  public const string contractAddress = "0xfC43b80A26f30bAA0131fd0ebD5789aB91Ba6785";
 
   private bool connected = false;
   private bool flag_fetchData = false;
 
+  public Player[] players;
+  public Participant[] participants;
+  public AwardRecord[] awardRecords;
   // Start is called before the first frame update
-  void Start()
+  async void Start()
   {
     root = GetComponent<UIDocument>().rootVisualElement;
     dashboard = root.Q<VisualElement>("dashboard");
-    scrollBoard = root.Q<ScrollView>("scrollBoard");
+    scrollBoard = root.Q<VisualElement>("scrollBoard");
     btnWallet = root.Q<Button>("btnWallet");
     btnStart = root.Q<Button>("btnStart");
-    lblLabel = root.Q<Label>("lblLabel");
+    btnParticipants = root.Q<Button>("btnParticipants");
+    btnPlayers = root.Q<Button>("btnPlayers");
+    btnAwards = root.Q<Button>("btnAwards");
 
     btnWallet.clicked += BtnWallet_clicked;
     btnStart.clicked += BtnStart_clicked;
+    btnParticipants.clicked += ShowParticipants;
+    btnPlayers.clicked += ShowPlayers;
+    btnAwards.clicked += ShowAwards;
     btnStart.SetEnabled(false);
+    btnParticipants.SetEnabled(false);
+    btnPlayers.SetEnabled(false);
+    btnAwards.SetEnabled(false);
 
     Web3Connect.Instance.OnConnected += Instance_OnConnected;
+    FetchData();
   }
 
 
@@ -68,7 +78,7 @@ public class Dashboard : MonoBehaviour
       // request user balance, we can use classic nethereum function
       var meerBalanceInGWei = await Web3Connect.Instance.Web3.Eth.GetBalance.SendRequestAsync(Web3Connect.Instance.AccountAddress);
       var meerBalance = UnitConversion.Convert.FromWei(meerBalanceInGWei.Value);
-      lblLabel.text = $"{meerBalance.ToString("F3")} MEER";
+      // lblLabel.text = $"{meerBalance.ToString("F3")} MEER";
       //   lblAccount.text = $"{Web3Connect.Instance.AccountAddress} {amount.ToString("F3")} MEER";
       Debug.Log("Data fetch");
 
@@ -78,33 +88,30 @@ public class Dashboard : MonoBehaviour
         var price = await snakeGameService.PriceQueryAsync();
         var withdrawAddress = await snakeGameService.WithdrawAddressQueryAsync();
         var awardShare = await snakeGameService.GetAwardShareQueryAsync();
-        var awardRecords = await snakeGameService.GetAwardRecordsQueryAsync();
+        awardRecords = (await snakeGameService.GetAwardRecordsQueryAsync()).ReturnValue1.ToArray();
         var playerAddresses = await snakeGameService.GetPlayersQueryAsync();
-        var players = new Player[playerAddresses.Count];
+        var newPlayers = new Player[playerAddresses.Count];
         for (int i = 0; i < (int)playerAddresses.Count; i++)
         {
-          players[i] = new Player();
-          players[i].address = playerAddresses[i];
-          players[i].accAward = await snakeGameService.AccAwardsQueryAsync(playerAddresses[i]);
-          players[i].accPoint = await snakeGameService.AccPointsQueryAsync(playerAddresses[i]);
+          newPlayers[i] = new Player();
+          newPlayers[i].address = playerAddresses[i];
+          newPlayers[i].accAward = await snakeGameService.AccAwardsQueryAsync(playerAddresses[i]);
+          newPlayers[i].accPoint = await snakeGameService.AccPointsQueryAsync(playerAddresses[i]);
         }
+        players = newPlayers.OrderBy(pl => pl.accPoint).ToArray();
         var participantAddresses = await snakeGameService.GetParticipantsQueryAsync();
-        var participants = new Participant[participantAddresses.Count];
+        var newParticipants = new Participant[participantAddresses.Count];
         for (int i = 0; i < participantAddresses.Count; i++)
         {
-          participants[i] = new Participant();
-          participants[i].address = participantAddresses[i];
-          participants[i].totalPoint = await snakeGameService.TotalPointsQueryAsync(participantAddresses[i]);
+          newParticipants[i] = new Participant();
+          newParticipants[i].address = participantAddresses[i];
+          newParticipants[i].totalPoint = await snakeGameService.TotalPointsQueryAsync(participantAddresses[i]);
         }
-        Debug.Log($"Owner: {owner}");
-        Debug.Log($"Price: {price}");
-        Debug.Log($"withdrawAddress: {withdrawAddress}");
-        Debug.Log($"awardShare: {awardShare}");
-        Debug.Log($"awardRecords: {awardRecords}");
-        Debug.Log($"playerAddresses: {playerAddresses}");
-        Debug.Log($"players: {players}");
-        Debug.Log($"participantAddresses: {participantAddresses}");
-        Debug.Log($"participants: {participants}");
+        participants = newParticipants.OrderBy(pl => pl.totalPoint).ToArray();
+
+        btnParticipants.SetEnabled(true);
+        btnPlayers.SetEnabled(true);
+        btnAwards.SetEnabled(true);
       }
       catch (System.Exception e)
       {
@@ -117,7 +124,10 @@ public class Dashboard : MonoBehaviour
   {
     try
     {
-      var txReceipt = await snakeGameService.StartGameRequestAndWaitForReceiptAsync();
+      StartGameFunction startGame = new StartGameFunction();
+      startGame.FromAddress = Web3Connect.Instance.AccountAddress;
+      startGame.AmountToSend = Web3.Convert.ToWei(0.5);
+      var txReceipt = await snakeGameService.StartGameRequestAndWaitForReceiptAsync(startGame);
       Debug.Log(Newtonsoft.Json.JsonConvert.SerializeObject(txReceipt));
       root.style.display = DisplayStyle.None;
       GameObject.Find("Snake").SendMessage("StartGame");
@@ -130,8 +140,12 @@ public class Dashboard : MonoBehaviour
 
   private async void EndGame(int score)
   {
+    Debug.Log($"score:{score}");
     root.style.display = DisplayStyle.Flex;
-    var txReceipt = await snakeGameService.EndGameRequestAndWaitForReceiptAsync(score);
+    EndGameFunction endGame = new EndGameFunction();
+    endGame.FromAddress = Web3Connect.Instance.AccountAddress;
+    endGame.Point = score;
+    var txReceipt = await snakeGameService.EndGameRequestAndWaitForReceiptAsync(endGame);
     Debug.Log(Newtonsoft.Json.JsonConvert.SerializeObject(txReceipt));
     FetchData();
   }
@@ -148,28 +162,151 @@ public class Dashboard : MonoBehaviour
     //   NativeCurrency = new NativeCurrency() { Decimals = 18, Name = "Matic", Symbol = "MATIC" },
     //   RpcUrls = new List<string> { "https://rpc-mumbai.maticvigil.com/" }
     // };
-    AddEthereumChainParameter data = new AddEthereumChainParameter()
-    {
-      ChainId = new BigInteger(5).ToHexBigInteger(),
-      BlockExplorerUrls = new List<string> { "https://goerli.etherscan.io/" },
-      ChainName = "Goerli Testnet",
-      IconUrls = new List<string> { "https://github.com/ethereum/ethereum-org/blob/master/dist/favicon.ico" },
-      NativeCurrency = new NativeCurrency() { Decimals = 18, Name = "GoerliETH", Symbol = "GoerliETH" },
-      RpcUrls = new List<string> { "https://goerli.infura.io/v3/" }
-    };
     // AddEthereumChainParameter data = new AddEthereumChainParameter()
     // {
-    //   ChainId = new BigInteger(223).ToHexBigInteger(),
-    //   BlockExplorerUrls = new List<string> { "https://testnet.qng.meerscan.io/" },
-    //   ChainName = "Qitmeer Testnet",
-    //   IconUrls = new List<string> { "https://testnet.qng.meerscan.io/images/favicon-32x32-de0f59b7ad593d6b99e463c3bbe4f5b3.png?vsn=d1" },
-    //   NativeCurrency = new NativeCurrency() { Decimals = 18, Name = "MEER", Symbol = "MEER" },
-    //   RpcUrls = new List<string> { "https://meer.testnet.meerfans.club", "https://evm-testnet-node.qitmeer.io" }
+    //   ChainId = new BigInteger(5).ToHexBigInteger(),
+    //   BlockExplorerUrls = new List<string> { "https://goerli.etherscan.io/" },
+    //   ChainName = "Goerli Testnet",
+    //   IconUrls = new List<string> { "https://github.com/ethereum/ethereum-org/blob/master/dist/favicon.ico" },
+    //   NativeCurrency = new NativeCurrency() { Decimals = 18, Name = "GoerliETH", Symbol = "GoerliETH" },
+    //   RpcUrls = new List<string> { "https://goerli.infura.io/v3/" }
     // };
+    AddEthereumChainParameter data = new AddEthereumChainParameter()
+    {
+      ChainId = new BigInteger(223).ToHexBigInteger(),
+      BlockExplorerUrls = new List<string> { "https://testnet.qng.meerscan.io/" },
+      ChainName = "Qitmeer Testnet",
+      IconUrls = new List<string> { "https://testnet.qng.meerscan.io/images/favicon-32x32-de0f59b7ad593d6b99e463c3bbe4f5b3.png?vsn=d1" },
+      NativeCurrency = new NativeCurrency() { Decimals = 18, Name = "MEER", Symbol = "MEER" },
+      RpcUrls = new List<string> { "https://meer.testnet.meerfans.club", "https://evm-testnet-node.qitmeer.io" }
+    };
     await Web3Connect.Instance.AddAndSwitchChain(data);
     print("switch end");
   }
 
+  private void ShowAwards()
+  {
+    scrollBoard.Clear();
+    if (awardRecords.Length == 0)
+    {
+      scrollBoard.Add(new Label("No data available."));
+    }
+    else
+    {
+      for (int i = 0; i < awardRecords.Length; i++)
+      {
+        VisualElement veRow = new VisualElement();
+        veRow.style.flexDirection = FlexDirection.Row;
+        VisualElement veTime = new VisualElement();
+        veTime.Add(new Label(TimeSpan.FromSeconds((long)awardRecords[i].Timestamp).ToString()));
+        VisualElement veMain = new VisualElement();
+
+        VisualElement colRank = new VisualElement();
+        VisualElement colAddr = new VisualElement();
+        VisualElement colScore = new VisualElement();
+        VisualElement colAmount = new VisualElement();
+        for (int j = 0; j < 5 && awardRecords[i].Amounts[j] > 0; i++)
+        {
+          Debug.Log(awardRecords[i].Amounts[j]);
+          // colRank.Add(new Label((j + 1).ToString()));
+          // colAddr.Add(new Label(awardRecords[i].Awardees[j]));
+          // colScore.Add(new Label(awardRecords[i].Scores[j].ToString("D")));
+          // colAmount.Add(new Label(awardRecords[i].Amounts[j].ToString("D")));
+        }
+        veMain.Add(colRank);
+        veMain.Add(colAddr);
+        veMain.Add(colScore);
+        veMain.Add(colAmount);
+        veRow.Add(veTime);
+        veRow.Add(veMain);
+        scrollBoard.Add(veRow);
+      }
+      scrollBoard.style.flexDirection = FlexDirection.Row;
+    }
+    flash();
+  }
+  private void ShowParticipants()
+  {
+    scrollBoard.Clear();
+    if (participants.Length == 0)
+    {
+      scrollBoard.Add(new Label("No data available."));
+    }
+    else
+    {
+      VisualElement colRank = new VisualElement();
+      VisualElement colAddr = new VisualElement();
+      VisualElement colPoint = new VisualElement();
+      colRank.style.unityTextAlign = TextAnchor.MiddleCenter;
+      for (int i = 0; i < participants.Length; i++)
+      {
+        Label rank = new Label();
+        Label addr = new Label();
+        Label point = new Label();
+        rank.text = (i + 1).ToString();
+        addr.text = participants[i].address;
+        point.text = participants[i].totalPoint.ToString("D");
+        colRank.Add(rank);
+        colAddr.Add(addr);
+        colPoint.Add(point);
+      }
+      scrollBoard.Add(colRank);
+      scrollBoard.Add(colAddr);
+      scrollBoard.Add(colPoint);
+      scrollBoard.style.flexDirection = FlexDirection.Row;
+    }
+    flash();
+  }
+  private void ShowPlayers()
+  {
+    scrollBoard.Clear();
+    if (players.Length == 0)
+    {
+      scrollBoard.Add(new Label("No data available."));
+    }
+    else
+    {
+      VisualElement colRank = new VisualElement();
+      VisualElement colAddr = new VisualElement();
+      VisualElement colPoint = new VisualElement();
+      VisualElement colAward = new VisualElement();
+      VisualElement colTime = new VisualElement();
+      colRank.style.unityTextAlign = TextAnchor.MiddleCenter;
+      for (int i = 0; i < players.Length; i++)
+      {
+        Label rank = new Label();
+        Label addr = new Label();
+        Label point = new Label();
+        Label award = new Label();
+        Label time = new Label();
+        rank.text = (i + 1).ToString();
+        addr.text = players[i].address;
+        point.text = players[i].accPoint.ToString("D");
+        award.text = players[i].accAward.ToString("D");
+        TimeSpan t = TimeSpan.FromSeconds((long)players[i].lastPlayedTime);
+        time.text = t.ToString();
+        colRank.Add(rank);
+        colAddr.Add(addr);
+        colPoint.Add(point);
+        colAward.Add(award);
+        colTime.Add(time);
+      }
+      scrollBoard.Add(colRank);
+      scrollBoard.Add(colAddr);
+      scrollBoard.Add(colPoint);
+      scrollBoard.Add(colAward);
+      // scrollBoard.Add(colTime);
+      scrollBoard.style.flexDirection = FlexDirection.Row;
+    }
+    flash();
+  }
+
+  private async void flash()
+  {
+    scrollBoard.EnableInClassList("highlight", true);
+    await UniTask.Delay(TimeSpan.FromSeconds(0.5));
+    scrollBoard.EnableInClassList("highlight", false);
+  }
   private void BtnWallet_clicked()
   {
     if (connected == false)
@@ -179,23 +316,15 @@ public class Dashboard : MonoBehaviour
       Web3Connect.Instance.Disconnect();
       connected = false;
       btnWallet.text = "Connect Wallet";
+      btnStart.SetEnabled(false);
+      btnParticipants.SetEnabled(false);
+      btnPlayers.SetEnabled(false);
+      btnAwards.SetEnabled(false);
     }
   }
   // Update is called once per frame
   void Update()
   {
-    scrollBoard.Clear();
-    var scoreRow = scoreRowTemplate.CloneTree().ElementAt(0);
-    scrollBoard.Add(scoreRow);
-    for (int i = 0; i < 100; i++)
-    {
-      scoreRow = scoreRowTemplate.CloneTree().ElementAt(0);
-      (scoreRow.ElementAt(0) as Label).text = (i + 1).ToString();
-      (scoreRow.ElementAt(1) as Label).text = "0x000000000000";
-      (scoreRow.ElementAt(2) as Label).text = (100 - i).ToString();
-      scrollBoard.Add(scoreRow);
-    }
-
     if (!connected)
     {
       if (Web3Connect.Instance.Connected)
@@ -214,8 +343,9 @@ public class Dashboard : MonoBehaviour
     {
       // prevent from multiple invoke repeating
       flag_fetchData = true;
-      InvokeRepeating("FetchData", 0, 100000);
+      InvokeRepeating("FetchData", 0, 20);
     }
     btnStart.SetEnabled(true);
+    BtnSwitch_clicked();
   }
 }

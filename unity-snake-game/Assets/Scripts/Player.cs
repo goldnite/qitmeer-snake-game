@@ -1,6 +1,6 @@
 using System.Numerics;
 
-class Player
+public class Player
 {
   public string address;
   public BigInteger accAward;
@@ -8,7 +8,7 @@ class Player
   public BigInteger lastPlayedTime;
 }
 
-class Participant
+public class Participant
 {
   public string address;
   public BigInteger totalPoint;

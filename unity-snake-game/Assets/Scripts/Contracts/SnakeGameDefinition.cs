@@ -139,6 +139,15 @@ namespace SnakeGame
         public virtual BigInteger ReturnValue1 { get; set; }
     }
 
+    public partial class PlayableFunction : PlayableFunctionBase { }
+
+    [Function("playable", "bool")]
+    public class PlayableFunctionBase : FunctionMessage
+    {
+        [Parameter("address", "", 1)]
+        public virtual string ReturnValue1 { get; set; }
+    }
+
     public partial class PlayersFunction : PlayersFunctionBase { }
 
     [Function("players", "address")]
@@ -384,6 +393,15 @@ namespace SnakeGame
     {
         [Parameter("address", "", 1)]
         public virtual string ReturnValue1 { get; set; }
+    }
+
+    public partial class PlayableOutputDTO : PlayableOutputDTOBase { }
+
+    [FunctionOutput]
+    public class PlayableOutputDTOBase : IFunctionOutputDTO 
+    {
+        [Parameter("bool", "", 1)]
+        public virtual bool ReturnValue1 { get; set; }
     }
 
     public partial class PlayersOutputDTO : PlayersOutputDTOBase { }
