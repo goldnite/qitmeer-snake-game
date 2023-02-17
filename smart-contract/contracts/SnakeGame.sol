@@ -23,7 +23,7 @@ contract SnakeGame is Context, Ownable, ReentrancyGuard {
     address public withdrawAddress =
         address(0xf753C11e5167247f156D22B0dd6C6333b934835c);
     uint256[5] public awardShare = [29, 24, 19, 14, 9]; // Share rates of award, eg. 29%/24%/19%/14%/9%
-    uint256 public price; // Price for playing a single game
+    uint256 public price = 5e17; // Price for playing a single game
 
     // Permanent variables
     address[] public players; // Address of players

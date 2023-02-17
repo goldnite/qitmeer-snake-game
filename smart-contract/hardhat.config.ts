@@ -8,6 +8,24 @@ const config: HardhatUserConfig = {
   defaultNetwork: "hardhat",
   etherscan: {
     apiKey: process.env.ETHERSCAN_API_KEY,
+    customChains: [
+      {
+        network: "qitmeer",
+        chainId: 223,
+        urls: {
+          apiURL: "https://testnet.qng.meerscan.io/api",
+          browserURL: "https://testnet.qng.meerscan.io",
+        },
+      },
+      {
+        network: "elastos",
+        chainId: 21,
+        urls: {
+          apiURL: "https://esc-testnet.elastos.io/api",
+          browserURL: "https://esc-testnet.elastos.io/",
+        },
+      },
+    ],
   },
   networks: {
     localhost: {
@@ -41,6 +59,12 @@ const config: HardhatUserConfig = {
     qitmeer: {
       url: "https://meer.testnet.meerfans.club",
       chainId: 223,
+      gasPrice: 20000000000,
+      accounts: [env.PRIVATEKEY],
+    },
+    elastos: {
+      url: "https://api-testnet.elastos.io/eth",
+      chainId: 21,
       gasPrice: 20000000000,
       accounts: [env.PRIVATEKEY],
     },
