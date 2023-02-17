@@ -29,6 +29,7 @@ contract SnakeGame is Context, Ownable, ReentrancyGuard {
     address[] public players; // Address of players
     mapping(address => uint256) public accPoints; // Points accumulated by players
     mapping(address => uint256) public accAwards; // Awards accumulated by players
+    mapping(address => bool) public playable; // True if address has paid to play
 
     AwardRecord[] public awardRecords; // Award records
 
@@ -55,12 +56,14 @@ contract SnakeGame is Context, Ownable, ReentrancyGuard {
 
     // Start game
     function startGame() external payable paymentCovered {
+        playable[_msgSender()] = true;
         emit StartGame(_msgSender(), block.timestamp);
     }
 
     // End Game
     function endGame(uint256 point) external nonReentrant {
-        require(point > 0, "bad operation");
+        require(point > 0 && playable[_msgSender()], "bad operation");
+        playable[_msgSender()] = false;
         // Store permanent variables
         if (accPoints[_msgSender()] == 0) {
             players.push(_msgSender());
@@ -84,9 +87,10 @@ contract SnakeGame is Context, Ownable, ReentrancyGuard {
         for (uint256 i = 0; i < participants.length; i++) {
             for (uint256 j = 0; j < 5; j++) {
                 if (
-                    totalPoints[participants[i]] >= totalPoints[winners[j]] &&
-                    lastPlayedTimes[participants[i]] <
-                    lastPlayedTimes[winners[j]]
+                    winners[j] == address(0) ||
+                    (totalPoints[participants[i]] >= totalPoints[winners[j]] &&
+                        lastPlayedTimes[participants[i]] <
+                        lastPlayedTimes[winners[j]])
                 ) {
                     for (uint256 k = j + 1; k < 5; k++)
                         winners[k] = winners[k - 1];
