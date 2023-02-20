@@ -6,6 +6,10 @@
   "repository": "https://github.com/goldnite/qitmeer-snake-game/tree/main/awardize-bot",
   "author": "goldnite",
   "license": "MIT",
+  "scripts": {
+    "run": "node index.mjs",
+    "start": "node index.mjs"
+  },
   "dependencies": {
     "dotenv": "^16.0.3",
     "ethers": "^5.7.2"
