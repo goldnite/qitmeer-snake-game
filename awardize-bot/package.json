@@ -1,0 +1,13 @@
+{
+  "name": "awardize-bot",
+  "version": "1.0.0",
+  "description": "This bot invokes awardize() function in the contract every 30 minutes.",
+  "main": "index.mjs",
+  "repository": "https://github.com/goldnite/qitmeer-snake-game/tree/main/awardize-bot",
+  "author": "goldnite",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "ethers": "^5.7.2"
+  }
+}
