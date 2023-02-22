@@ -186,32 +186,46 @@ public class Dashboard : MonoBehaviour
 
   private void ShowAwards()
   {
-    scrollBoard.Clear();
+    VisualElement wrapper = new VisualElement();
+    wrapper.style.width = new StyleLength(Length.Percent(100.0f));
+    wrapper.style.flexDirection = FlexDirection.Column;
+    wrapper.style.justifyContent = Justify.Center;
+    wrapper.style.alignItems = Align.Center;
     if (awardRecords.Length == 0)
     {
-      scrollBoard.Add(new Label("No data available."));
+      wrapper.Add(new Label("No data available."));
     }
     else
     {
       for (int i = 0; i < awardRecords.Length; i++)
       {
         VisualElement veRow = new VisualElement();
-        veRow.style.flexDirection = FlexDirection.Row;
+        veRow.style.width = new StyleLength(Length.Percent(100.0f));
+        veRow.style.flexDirection = FlexDirection.Column;
         VisualElement veTime = new VisualElement();
-        veTime.Add(new Label(TimeSpan.FromSeconds((long)awardRecords[i].Timestamp).ToString()));
+        veTime.style.alignItems = Align.Center;
+        veTime.style.justifyContent = Justify.Center;
+        veTime.Add(new Label((new DateTime(1970, 1, 1, 0, 0, 0, 0) + TimeSpan.FromSeconds((long)awardRecords[i].Timestamp)).ToString()));
         VisualElement veMain = new VisualElement();
+        veMain.style.flexDirection = FlexDirection.Row;
+        veMain.style.justifyContent = Justify.SpaceBetween;
+        veMain.style.width = new StyleLength(Length.Percent(100.0f));
 
         VisualElement colRank = new VisualElement();
         VisualElement colAddr = new VisualElement();
         VisualElement colScore = new VisualElement();
         VisualElement colAmount = new VisualElement();
-        for (int j = 0; j < 5 && awardRecords[i].Amounts[j] > 0; i++)
+        colRank.style.flexDirection = FlexDirection.Column;
+        colAddr.style.flexDirection = FlexDirection.Column;
+        colScore.style.flexDirection = FlexDirection.Column;
+        colAmount.style.flexDirection = FlexDirection.Column;
+        for (int j = 0; j < awardRecords[i].Amounts.Count; j++)
         {
           Debug.Log(awardRecords[i].Amounts[j]);
-          // colRank.Add(new Label((j + 1).ToString()));
-          // colAddr.Add(new Label(awardRecords[i].Awardees[j]));
-          // colScore.Add(new Label(awardRecords[i].Scores[j].ToString("D")));
-          // colAmount.Add(new Label(awardRecords[i].Amounts[j].ToString("D")));
+          colRank.Add(new Label((j + 1).ToString()));
+          colAddr.Add(new Label(awardRecords[i].Awardees[j]));
+          colScore.Add(new Label(awardRecords[i].Scores[j].ToString("D")));
+          colAmount.Add(new Label(awardRecords[i].Amounts[j].ToString("D")));
         }
         veMain.Add(colRank);
         veMain.Add(colAddr);
@@ -219,18 +233,23 @@ public class Dashboard : MonoBehaviour
         veMain.Add(colAmount);
         veRow.Add(veTime);
         veRow.Add(veMain);
-        scrollBoard.Add(veRow);
+        wrapper.Add(veRow);
       }
-      scrollBoard.style.flexDirection = FlexDirection.Row;
     }
+    scrollBoard.Clear();
+    scrollBoard.Add(wrapper);
     flash();
   }
   private void ShowParticipants()
   {
-    scrollBoard.Clear();
+    VisualElement wrapper = new VisualElement();
+    wrapper.style.width = new StyleLength(Length.Percent(100.0f));
+    wrapper.style.flexDirection = FlexDirection.Row;
+    wrapper.style.justifyContent = Justify.SpaceBetween;
+    wrapper.style.alignItems = Align.Center;
     if (participants.Length == 0)
     {
-      scrollBoard.Add(new Label("No data available."));
+      wrapper.Add(new Label("No data available."));
     }
     else
     {
@@ -250,19 +269,25 @@ public class Dashboard : MonoBehaviour
         colAddr.Add(addr);
         colPoint.Add(point);
       }
-      scrollBoard.Add(colRank);
-      scrollBoard.Add(colAddr);
-      scrollBoard.Add(colPoint);
-      scrollBoard.style.flexDirection = FlexDirection.Row;
+      wrapper.Add(colRank);
+      wrapper.Add(colAddr);
+      wrapper.Add(colPoint);
+      wrapper.style.flexDirection = FlexDirection.Row;
     }
+    scrollBoard.Clear();
+    scrollBoard.Add(wrapper);
     flash();
   }
   private void ShowPlayers()
   {
-    scrollBoard.Clear();
+    VisualElement wrapper = new VisualElement();
+    wrapper.style.width = new StyleLength(Length.Percent(100.0f));
+    wrapper.style.flexDirection = FlexDirection.Row;
+    wrapper.style.justifyContent = Justify.SpaceBetween;
+    wrapper.style.alignItems = Align.Center;
     if (players.Length == 0)
     {
-      scrollBoard.Add(new Label("No data available."));
+      wrapper.Add(new Label("No data available."));
     }
     else
     {
@@ -283,7 +308,7 @@ public class Dashboard : MonoBehaviour
         addr.text = players[i].address;
         point.text = players[i].accPoint.ToString("D");
         award.text = players[i].accAward.ToString("D");
-        TimeSpan t = TimeSpan.FromSeconds((long)players[i].lastPlayedTime);
+        DateTime t = new DateTime(1970, 1, 1, 0, 0, 0, 0) + TimeSpan.FromSeconds((long)players[i].lastPlayedTime);
         time.text = t.ToString();
         colRank.Add(rank);
         colAddr.Add(addr);
@@ -291,13 +316,15 @@ public class Dashboard : MonoBehaviour
         colAward.Add(award);
         colTime.Add(time);
       }
-      scrollBoard.Add(colRank);
-      scrollBoard.Add(colAddr);
-      scrollBoard.Add(colPoint);
-      scrollBoard.Add(colAward);
-      // scrollBoard.Add(colTime);
-      scrollBoard.style.flexDirection = FlexDirection.Row;
+      wrapper.Add(colRank);
+      wrapper.Add(colAddr);
+      wrapper.Add(colPoint);
+      wrapper.Add(colAward);
+      // wrapper.Add(colTime);
+      wrapper.style.flexDirection = FlexDirection.Row;
     }
+    scrollBoard.Clear();
+    scrollBoard.Add(wrapper);
     flash();
   }
 
