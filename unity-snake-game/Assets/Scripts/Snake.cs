@@ -118,7 +118,7 @@ public class Snake : MonoBehaviour
     }
     else if (other.gameObject.CompareTag("Obstacle"))
     {
-      GameObject.Find("UIDocument").SendMessage("EndGame", segments.Count);
+      GameObject.Find("Landing").SendMessage("EndGame", segments.Count);
       isPlaying = false;
     }
   }
