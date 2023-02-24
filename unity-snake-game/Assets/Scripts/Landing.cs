@@ -25,6 +25,9 @@ public class Landing : MonoBehaviour
 {
 
   [SerializeField] private WindowManager windowManager;
+  [SerializeField] private NotificationStacking notifications;
+  [SerializeField] private NotificationManager success;
+  [SerializeField] private NotificationManager failure;
 
   [SerializeField] private ButtonManagerBasicWithIcon btnWallet;
   [SerializeField] private ButtonManagerBasicWithIcon btnStart;
@@ -55,6 +58,9 @@ public class Landing : MonoBehaviour
   // Start is called before the first frame update
   void Start()
   {
+#if !(DEVELOPMENT_BUILD || UNITY_EDITOR)
+    Debug.unityLogger.filterLogType = LogType.Exception;
+#endif
     EnableButton(btnStart, false);
     EnableButton(btnParticipants, false);
     EnableButton(btnPlayers, false);
@@ -254,31 +260,60 @@ public class Landing : MonoBehaviour
   {
     try
     {
-      windowManager.OpenPanel("Blank");
+      windowManager.OpenPanel("Loading");
       StartGameFunction startGame = new StartGameFunction();
       startGame.FromAddress = Web3Connect.Instance.AccountAddress;
       startGame.AmountToSend = Web3.Convert.ToWei(0.5);
       var txReceipt = await snakeGameService.StartGameRequestAndWaitForReceiptAsync(startGame);
       Debug.Log(Newtonsoft.Json.JsonConvert.SerializeObject(txReceipt));
+      windowManager.OpenPanel("Blank");
       gameImage.enabled = true;
       GameObject.Find("Snake").SendMessage("StartGame");
     }
     catch (System.Exception e)
     {
       Debug.LogException(e);
+      NotificationManager s = GameObject.Instantiate(failure, notifications.gameObject.transform);
+      s.description = $"User denied transaction.";
+      windowManager.OpenPanel("Blank");
     }
   }
 
   private async void EndGame(int score)
   {
-    Debug.Log($"score:{score}");
-    gameImage.enabled = false;
-    EndGameFunction endGame = new EndGameFunction();
-    endGame.FromAddress = Web3Connect.Instance.AccountAddress;
-    endGame.Point = score;
-    var txReceipt = await snakeGameService.EndGameRequestAndWaitForReceiptAsync(endGame);
-    Debug.Log(Newtonsoft.Json.JsonConvert.SerializeObject(txReceipt));
-    FetchData();
+    try
+    {
+      windowManager.OpenPanel("Loading");
+      Debug.Log($"score:{score}");
+      gameImage.enabled = false;
+      EndGameFunction endGame = new EndGameFunction();
+      endGame.FromAddress = Web3Connect.Instance.AccountAddress;
+      endGame.Point = score;
+      NotificationManager s = GameObject.Instantiate(success, notifications.gameObject.transform);
+      s.description = $"You have earned {score} points.";
+      var txReceipt = await snakeGameService.EndGameRequestAndWaitForReceiptAsync(endGame);
+      // BigInteger score = new BigInteger(txReceipt.DecodeAllEvents<EndGameEventDTO>()[0].Point);
+      Debug.Log(Newtonsoft.Json.JsonConvert.SerializeObject(txReceipt));
+      if (txReceipt.Status.Value == 1)
+      {
+        s = GameObject.Instantiate(success, notifications.gameObject.transform);
+        s.description = $"Point saved on-chain.";
+      }
+      else
+      {
+        s = GameObject.Instantiate(failure, notifications.gameObject.transform);
+        s.description = $"Something went wrong.";
+      }
+      FetchData();
+      windowManager.OpenPanel("Blank");
+    }
+    catch (System.Exception e)
+    {
+      Debug.LogException(e);
+      NotificationManager s = GameObject.Instantiate(failure, notifications.gameObject.transform);
+      s.description = $"User denied transaction.";
+      windowManager.OpenPanel("Blank");
+    }
   }
 
 }
