@@ -54,15 +54,17 @@ public class Snake : MonoBehaviour
   private void FixedUpdate()
   {
     if (!isPlaying) return;
+
+    int delta = (int)(Time.time - startTime) / speedIncreaseInterval;
+    if (++counter < ((speedStep - delta) >= 1 ? (speedStep - delta) : 1)) return;
+    counter = 0;
+
     // Set the new direction based on the input
     if (input != Vector2.zero)
     {
       direction = input;
     }
 
-    int delta = (int)(Time.time - startTime) / speedIncreaseInterval;
-    if (++counter < ((speedStep - delta) >= 1 ? (speedStep - delta) : 1)) return;
-    counter = 0;
     // Set each segment's position to be the same as the one it follows. We
     // must do this in reverse order so the position is set to the previous
     // position, otherwise they will all be stacked on top of each other.
